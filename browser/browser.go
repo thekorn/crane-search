@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bytes"
-	"encoding/gob"
 	"log"
 	"syscall/js"
 	"time"
+
+	"github.com/vmihailenco/msgpack/v5"
 
 	search "github.com/healeycodes/crane-search"
 )
@@ -21,10 +21,10 @@ func main() {
 func load(this js.Value, args []js.Value) interface{} {
 	b := make([]byte, args[0].Get("length").Int())
 	js.CopyBytesToGo(b, args[0])
-	buf := bytes.NewBuffer(b)
-	dec := gob.NewDecoder(buf)
+	//buf := bytes.NewBuffer(b)
+	//dec := gob.NewDecoder(buf)
 
-	if err := dec.Decode(&store); err != nil {
+	if err := msgpack.Unmarshal(b, &store); err != nil {
 		return js.ValueOf(err.Error())
 	}
 	return js.ValueOf(true)
