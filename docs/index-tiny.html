@@ -9,7 +9,7 @@
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css"
         />
-        <script src="wasm_exec.js"></script>
+        <script src="wasm_exec_tinygo.js"></script>
         <script src="crane.js"></script>
     </head>
     <body>
@@ -42,7 +42,7 @@
                 "#crane-load-progress",
             );
             const craneResults = document.querySelector("#crane-results");
-            const crane = new Crane("crane.wasm", "federalist.crane");
+            const crane = new Crane("cranetiny.wasm", "federalist.crane");
 
             function search(elem) {
                 const results = crane.query(elem.value);

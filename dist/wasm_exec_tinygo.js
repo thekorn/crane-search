@@ -557,6 +557,21 @@
             mem().setUint32(num_bytes_copied_addr, toCopy.length, true);
             mem().setUint8(returned_status_addr, 1); // Return "ok" status
           },
+
+          // func finalizeRef(v ref)
+          "syscall/js.finalizeRef": (v_ref) => {
+            // Note: TinyGo does not support finalizers so this should never be
+            // called.
+            console.warn("syscall/js.finalizeRef not implemented");
+            const id = mem().getUint32(unboxValue(v_ref), true);
+            this._goRefCounts[id]--;
+            if (this._goRefCounts[id] === 0) {
+              const v = this._values[id];
+              this._values[id] = null;
+              this._ids.delete(v);
+              this._idPool.push(id);
+            }
+          },
         },
       };
 

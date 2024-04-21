@@ -1,12 +1,13 @@
 package main
 
 import (
-	"encoding/gob"
 	"errors"
 	"io/ioutil"
 	"log"
 	"os"
 	"time"
+
+	"github.com/vmihailenco/msgpack/v5"
 
 	"github.com/BurntSushi/toml"
 	search "github.com/healeycodes/crane-search"
@@ -73,12 +74,14 @@ func build() {
 	check(err)
 	defer file.Close()
 
-	encoder := gob.NewEncoder(file)
+	// encoder := gob.NewEncoder(file)
 	store := search.Store{
 		Index:   index,
 		Results: results,
 	}
-	err = encoder.Encode(store)
+	bytes, err := msgpack.Marshal(store)
+	check(err)
+	_, err = file.Write(bytes)
 	check(err)
 }
 
